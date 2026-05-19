@@ -12,4 +12,4 @@ public slots:
 private:
     std::function<void(const QString&)> m_cb;
 };
-#include "touchbarreciever.moc"
+#include "touchbarreciever.cpp"
