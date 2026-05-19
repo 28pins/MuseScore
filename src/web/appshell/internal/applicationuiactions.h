@@ -44,6 +44,7 @@ class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::Con
     muse::GlobalInject<mu::notation::INotationConfiguration> notationConfiguration;
     muse::ContextInject<muse::ui::IMainWindow> mainWindow = { this };
     muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider = { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher = { this };
 
 public:
     ApplicationUiActions(std::shared_ptr<ApplicationActionController> controller, const muse::modularity::ContextPtr& iocCtx);

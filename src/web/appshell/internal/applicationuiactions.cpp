@@ -179,6 +179,10 @@ void ApplicationUiActions::init()
     });
 }
 
+void ApplicationUiActions::onTouchBarAction(const QString& actionCode) {
+    dispatcher()->dispatch(actionCode.toStdString());
+}
+
 void ApplicationUiActions::listenOpenedDocksChanged(IDockWindow* window)
 {
     if (!window) {
