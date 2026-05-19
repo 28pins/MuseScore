@@ -238,6 +238,20 @@ qt_add_executable(MuseScoreStudio
     ${APP_SRC}
 )
 
+if (OS_IS_MAC)
+    # Touch Bar: add Swift + ObjC++ bridge + macOS client wrapper
+    target_sources(MuseScoreStudio PRIVATE
+        ${PROJECT_SOURCE_DIR}/TouchBar/TouchBarController.swift
+        ${PROJECT_SOURCE_DIR}/TouchBar/touchbarbridge.mm
+        ${PROJECT_SOURCE_DIR}/src/appshell/platform/macos/touchbar_client.cpp
+    )
+
+    # Ensure the TouchBar dir is on the include path so C++ can #include "touchbarbridge.h"
+    target_include_directories(MuseScoreStudio PRIVATE
+        ${PROJECT_SOURCE_DIR}/TouchBar
+    )
+endif()
+
 ###########################################
 # Setting target properties
 ###########################################
