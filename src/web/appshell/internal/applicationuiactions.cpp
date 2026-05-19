@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "applicationuiactions.h"
-
+#include "touchbarreciever.h"
 #include "ui/view/iconcodes.h"
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
@@ -176,15 +176,10 @@ void ApplicationUiActions::init()
 
     notationConfiguration()->useNewPercussionPanelChanged().onNotify(this, [this]() {
         m_actionEnabledChanged.send({ TOGGLE_PERCUSSION_PANEL_ACTION_CODE });
-    });
+    }); 
 }
 
-void ApplicationUiActions::onTouchBarAction(const QString& actionCode) {
-    dispatcher()->dispatch(actionCode.toStdString());
-}
-
-void ApplicationUiActions::listenOpenedDocksChanged(IDockWindow* window)
-{
+void ApplicationUiActions::listenOpenedDocksChanged(IDockWindow* window) {
     if (!window) {
         return;
     }
@@ -275,3 +270,4 @@ const QMap<ActionCode, DockName>& ApplicationUiActions::toggleDockActions()
 
     return actionsMap;
 }
+#include "applicationuiactions.moc"
