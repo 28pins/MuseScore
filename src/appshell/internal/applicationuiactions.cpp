@@ -29,6 +29,19 @@
 #include "async/notification.h"
 
 #include "log.h"
+#include "touchbar_client.h"
+#include <functional>
+
+class TouchBarReceiver : public QObject {
+    Q_OBJECT
+public:
+    TouchBarReceiver(std::function<void(const QString&)> cb, QObject* parent = nullptr)
+        : QObject(parent), m_cb(cb) {}
+public slots:
+    void onTouchBarAction(const QString& actionCode) { if (m_cb) m_cb(actionCode); }
+private:
+    std::function<void(const QString&)> m_cb;
+};
 
 using namespace muse;
 using namespace mu::appshell;
@@ -307,6 +320,23 @@ void ApplicationUiActions::init()
     dockWindowProvider()->windowChanged().onNotify(this, [this]() {
         listenOpenedDocksChanged(dockWindowProvider()->window());
     });
+    #if defined(OS_IS_MAC)
+        // Touch Bar setup
+        auto receiver = new TouchBarReceiver([this](const QString& code){
+            qDebug() << "TB pressed:" << code; // placeholder; will dispatch later
+        }, this);
+        tbClientInit(receiver);
+
+        const QStringList tbList = { "toggle-transport","toggle-noteinput","toggle-mixer","toggle-statusbar" };
+        for (const auto &act : m_actions) {
+            QString code = QString::fromStdString(act.code);
+            if (tbList.contains(code)) {
+                tbClientAddButton(code, code, QIcon());
+                tbClientSetEnabled(code, actionEnabled(act));
+                tbClientSetChecked(code, actionChecked(act));
+            }
+        }
+    #endif
 }
 
 void ApplicationUiActions::listenOpenedDocksChanged(IDockWindow* window)
